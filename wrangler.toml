@@ -1,0 +1,11 @@
+name = "open-collective-auth"
+main = "src/index.ts"
+compatibility_date = "2022-11-28"
+
+[vars]
+
+# Necessary secrets:
+# - OPEN_COLLECTIVE_CLIENT_ID
+# - OPEN_COLLECTIVE_CLIENT_SECRET
+# - DISCORD_WEBHOOK_URL
+# - SECRET_KEY
