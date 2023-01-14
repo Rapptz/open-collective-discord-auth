@@ -144,7 +144,9 @@ router.get("/discord/redirect", async (req: IttyRequest) => {
     let tokens = await discord.getOAuth2Tokens(code);
     let user = await discord.getUser(tokens.access_token);
 
-    await postInformationToDiscord(user.id, tokens, validated.oc);
+    if (DISCORD_WEBHOOK_URL.length > 0) {
+      await postInformationToDiscord(user.id, tokens, validated.oc);
+    }
     await discord.postMetadata(
       tokens.access_token,
       validated.metadata,
