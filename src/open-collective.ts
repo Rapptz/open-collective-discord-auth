@@ -128,7 +128,7 @@ export async function getOpenCollectiveMetadata(
             }
           }
           collective(slug: $slug) {
-            transactions(fromAccount: {id: $account_id}, limit: 1) {
+            transactions(fromAccount: {id: $account_id}, limit: 1, type: CREDIT) {
               nodes {
                 amountInHostCurrency {
                   value
