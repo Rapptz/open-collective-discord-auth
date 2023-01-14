@@ -3,9 +3,14 @@ main = "src/index.ts"
 compatibility_date = "2022-11-28"
 
 [vars]
+OPEN_COLLECTIVE_REDIRECT_URL="https://open-collective-auth.rapptz.workers.dev/open-collective/redirect"
+DISCORD_REDIRECT_URL="https://open-collective-auth.rapptz.workers.dev/discord/redirect"
+OPEN_COLLECTIVE_SLUG="discordpy"
 
 # Necessary secrets:
 # - OPEN_COLLECTIVE_CLIENT_ID
 # - OPEN_COLLECTIVE_CLIENT_SECRET
+# - DISCORD_CLIENT_ID
+# - DISCORD_CLIENT_SECRET
 # - DISCORD_WEBHOOK_URL
 # - SECRET_KEY

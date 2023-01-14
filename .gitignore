@@ -169,3 +169,7 @@ dist
 # wrangler project
 
 .dev.vars
+
+# Configuration
+
+config.json

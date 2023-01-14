@@ -1,6 +1,6 @@
-## Open Collective Auth Server
+## Open Collective Discord Integration
 
-This is a Cloudflare Workers component used for R. Danny's open collective link with Discord. It's provided mainly for transparency reasons so you can see there's nothing surprising going on here.
+This is a Cloudflare Workers component used for implementing part of the linked role integration with Open Collective.
 
 ### Secrets
 
