@@ -3,9 +3,9 @@ main = "src/index.ts"
 compatibility_date = "2022-11-28"
 
 [vars]
-OPEN_COLLECTIVE_REDIRECT_URL="https://open-collective-auth.rapptz.workers.dev/open-collective/redirect"
-DISCORD_REDIRECT_URL="https://open-collective-auth.rapptz.workers.dev/discord/redirect"
-OPEN_COLLECTIVE_SLUG="discordpy"
+DISCORD_REDIRECT_URL = "https://link.tako-bot.com/discord/redirect"
+OPEN_COLLECTIVE_REDIRECT_URL = "https://link.tako-bot.com/open-collective/redirect"
+OPEN_COLLECTIVE_SLUG = "tako"
 
 # Necessary secrets:
 # - OPEN_COLLECTIVE_CLIENT_ID
