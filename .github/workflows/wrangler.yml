@@ -8,9 +8,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy
+    name: Run & Deploy
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v3.6.0
+      - name: Install Dependencies
+        run: npm install
+      - name: Create config.json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "config.json"
+          json: ${{ secrets.REGISTER_CONF }}
+      - name: Register Metadata
+        run: node ./register.js
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:
