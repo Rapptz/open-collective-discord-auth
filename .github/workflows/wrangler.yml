@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
@@ -23,7 +23,7 @@ jobs:
             DISCORD_CLIENT_SECRET
             DISCORD_WEBHOOK_URL
             SECRET_KEY
-         env:
+        env:
           OPEN_COLLECTIVE_CLIENT_ID: ${{ secrets.OC_CLIENT_ID }}
           OPEN_COLLECTIVE_CLIENT_SECRET: ${{ secrets.OC_SECRET }}
           DISCORD_CLIENT_ID: ${{ secrets.DC_CLIENT_ID }}
