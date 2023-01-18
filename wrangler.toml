@@ -3,8 +3,8 @@ main = "src/index.ts"
 compatibility_date = "2022-11-28"
 
 [vars]
-DISCORD_REDIRECT_URL = "https://open-collective-auth.pukima.workers.dev/discord/redirect"
-OPEN_COLLECTIVE_REDIRECT_URL = "https://open-collective-auth.pukima.workers.dev/open-collective/redirect"
+DISCORD_REDIRECT_URL = "https://link.tako-bot.com/discord/redirect"
+OPEN_COLLECTIVE_REDIRECT_URL = "https://link.tako-bot.com/open-collective/redirect"
 OPEN_COLLECTIVE_SLUG = "tako"
 
 # Necessary secrets:
