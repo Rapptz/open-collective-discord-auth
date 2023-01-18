@@ -74,7 +74,7 @@ async function postInformationToDiscord(
 }
 
 /* this is the entry point, i.e. before logging in to anything but starts the entire flow. */
-router.get("/linked-role", async (req: IttyRequest) => {
+router.get("/", async (req: IttyRequest) => {
   const nonce = randomNonce();
   const url = await getOpenCollectiveLoginUrl(nonce);
   const cookie = `nonce=${nonce}; Path=/; Max-Age=90000; Secure; HttpOnly; SameSite=Lax`;
