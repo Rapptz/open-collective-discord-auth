@@ -24,8 +24,8 @@ async function run() {
     {
       key: "last_donation",
       name: "Last Donation",
-      description: "Days since their last donation",
-      type: 6,
+      description: "Maximum days since their last donation",
+      type: 5,
     },
     {
       key: "last_donation_amount",
