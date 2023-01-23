@@ -79,34 +79,32 @@ export interface Metadata {
   is_backer: number;
 }
 
-interface OpenCollectiveMetadataQueryResultMemberOf {
-  nodes: {
-    totalDonations: {
-      value: number;
-    };
-    account: {
-      transactions: {
-        nodes: {
-          amountInHostCurrency: {
-            value: number;
-          };
-          createdAt: string;
-        }[];
+interface OpenCollectiveMetadataQueryResultAccount {
+  memberOf: {
+    nodes: {
+      totalDonations: {
+        value: number;
       };
-    };
-    role: string;
-  }[];
+      account: {};
+      role: string;
+    }[];
+  };
+  transactions: {
+    nodes: {
+      amountInHostCurrency: {
+        value: number;
+      };
+      createdAt: string;
+    }[];
+  };
 }
 
 interface OpenCollectiveMetadataQueryResult {
   data: {
-    account: {
-      memberOf: OpenCollectiveMetadataQueryResultMemberOf;
+    account: OpenCollectiveMetadataQueryResultAccount & {
       organizations: {
         nodes: {
-          account: {
-            memberOf: OpenCollectiveMetadataQueryResultMemberOf;
-          };
+          account: OpenCollectiveMetadataQueryResultAccount;
         }[];
       };
     };
@@ -131,17 +129,15 @@ export async function getOpenCollectiveMetadata(
               totalDonations {
                 value
               }
-              account {
-                transactions(fromAccount: {slug: $slug}, limit: 1, type: DEBIT) {
-                  nodes {
-                    amountInHostCurrency {
-                      value
-                    }
-                    createdAt
-                  }
-                }
-              }
               role
+            }
+          }
+          transactions(fromAccount: {slug: $slug}, limit: 1, type: DEBIT) {
+            nodes {
+              amountInHostCurrency {
+                value
+              }
+              createdAt
             }
           }
         }
@@ -181,13 +177,13 @@ export async function getOpenCollectiveMetadata(
       node.role === "MEMBER"
         ? 1
         : 0;
-    if (node.account.transactions.nodes.length == 0) {
+    if (account.transactions.nodes.length == 0) {
       continue;
     }
-    const transaction = node.account.transactions.nodes[0];
+    const transaction = account.transactions.nodes[0];
     if (!metadata.last_donation || transaction.createdAt > metadata.last_donation) {
       metadata.last_donation = transaction.createdAt;
-      metadata.last_donation_amount = Math.ceil(transaction.amountInHostCurrency.value);
+      metadata.last_donation_amount = Math.ceil(-transaction.amountInHostCurrency.value);
     }
   }
   return metadata;
