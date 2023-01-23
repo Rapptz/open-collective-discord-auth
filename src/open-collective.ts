@@ -79,25 +79,34 @@ export interface Metadata {
   is_backer: number;
 }
 
-interface OpenCollectiveMetadataQueryResult {
-  data: {
-    account: {
-      memberOf: {
-        nodes: {
-          totalDonations: {
-            value: number;
-          };
-          role: string;
-        }[];
-      };
+interface OpenCollectiveMetadataQueryResultMemberOf {
+  nodes: {
+    totalDonations: {
+      value: number;
     };
-    collective: {
+    account: {
       transactions: {
         nodes: {
           amountInHostCurrency: {
             value: number;
           };
           createdAt: string;
+        }[];
+      };
+    };
+    role: string;
+  }[];
+}
+
+interface OpenCollectiveMetadataQueryResult {
+  data: {
+    account: {
+      memberOf: OpenCollectiveMetadataQueryResultMemberOf;
+      organizations: {
+        nodes: {
+          account: {
+            memberOf: OpenCollectiveMetadataQueryResultMemberOf;
+          };
         }[];
       };
     };
@@ -116,24 +125,34 @@ export async function getOpenCollectiveMetadata(
     },
     body: JSON.stringify({
       query: String.raw`
-        query metadata($slug: String, $account_id: String) {
-          account (id: $account_id) {
-            memberOf (account: {slug: $slug}, limit: 1) {
-              nodes {
-                totalDonations {
-                  value
-                }
-                role
+        fragment AccountParts on Account {
+          memberOf (account: {slug: $slug}, limit: 1) {
+            nodes {
+              totalDonations {
+                value
               }
+              account {
+                transactions(fromAccount: {slug: $slug}, limit: 1, type: DEBIT) {
+                  nodes {
+                    amountInHostCurrency {
+                      value
+                    }
+                    createdAt
+                  }
+                }
+              }
+              role
             }
           }
-          collective(slug: $slug) {
-            transactions(fromAccount: {id: $account_id}, limit: 1, type: CREDIT) {
+        }
+        query metadata($slug: String, $account_id: String) {
+          account (id: $account_id) {
+            ...AccountParts
+            organizations: memberOf (accountType: ORGANIZATION) {
               nodes {
-                amountInHostCurrency {
-                  value
+                account {
+                  ...AccountParts
                 }
-                createdAt
               }
             }
           }
@@ -146,21 +165,30 @@ export async function getOpenCollectiveMetadata(
   });
   const json: OpenCollectiveMetadataQueryResult = await res.json();
   let metadata: Metadata = { is_backer: 0 };
-  if (json.data.account.memberOf.nodes.length > 0) {
-    const node = json.data.account.memberOf.nodes[0];
-    metadata.total_donated = Math.ceil(node.totalDonations.value);
+  const accounts = [json.data, ...json.data.account.organizations.nodes];
+  for (const { account } of accounts) {
+    if (account.memberOf.nodes.length == 0) {
+      continue;
+    }
+    const node = account.memberOf.nodes[0];
+    metadata.total_donated ??= 0;
+    metadata.total_donated += Math.ceil(node.totalDonations.value);
     metadata.is_backer =
+      metadata.is_backer ||
       node.role === "BACKER" ||
       node.role === "ADMIN" ||
       node.role === "CONTRIBUTOR" ||
       node.role === "MEMBER"
         ? 1
         : 0;
-  }
-  if (json.data.collective.transactions.nodes.length > 0) {
-    const node = json.data.collective.transactions.nodes[0];
-    metadata.last_donation = node.createdAt;
-    metadata.last_donation_amount = Math.ceil(node.amountInHostCurrency.value);
+    if (node.account.transactions.nodes.length == 0) {
+      continue;
+    }
+    const transaction = node.account.transactions.nodes[0];
+    if (!metadata.last_donation || transaction.createdAt > metadata.last_donation) {
+      metadata.last_donation = transaction.createdAt;
+      metadata.last_donation_amount = Math.ceil(transaction.amountInHostCurrency.value);
+    }
   }
   return metadata;
 }
