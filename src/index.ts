@@ -6,6 +6,7 @@ import {
   getOpenCollectiveMetadata,
   getOpenCollectiveUser,
   Metadata,
+  MetadataResult,
   OpenCollectiveMeQueryResult,
   OpenCollectiveUser,
 } from "./open-collective";
@@ -107,17 +108,17 @@ router.get("/open-collective/redirect", async (req: IttyRequest) => {
 
   let access_token: string;
   let user: OpenCollectiveMeQueryResult;
-  let metadata: Metadata;
+  let result: MetadataResult;
   try {
     access_token = await getOpenCollectiveAccessToken(code);
     user = await getOpenCollectiveUser(access_token);
-    metadata = await getOpenCollectiveMetadata(access_token, user.data.me.id);
+    result = await getOpenCollectiveMetadata(access_token, user.data.me.id);
   } catch (e: any) {
     return htmlResponse(e.toString(), false);
   }
 
-  validated.oc = user.data.me;
-  validated.metadata = metadata;
+  validated.oc = result.user || user.data.me;
+  validated.metadata = result.metadata;
   const signed = await sign(validated);
   const redirect = discord.getOAuthUrl(signed);
   return new Response(null, {

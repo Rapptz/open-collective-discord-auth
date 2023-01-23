@@ -91,6 +91,7 @@ interface OpenCollectiveMetadataQueryResultAccount {
   };
   transactions: {
     nodes: {
+      account: OpenCollectiveUser;
       amountInHostCurrency: {
         value: number;
       };
@@ -111,10 +112,15 @@ interface OpenCollectiveMetadataQueryResult {
   };
 }
 
+export interface MetadataResult {
+  metadata: Metadata;
+  user?: OpenCollectiveUser;
+}
+
 export async function getOpenCollectiveMetadata(
   access_token: string,
   account_id: string
-): Promise<Metadata> {
+): Promise<MetadataResult> {
   const res = await fetch("https://opencollective.com/api/graphql/v2", {
     method: "POST",
     headers: {
@@ -134,6 +140,7 @@ export async function getOpenCollectiveMetadata(
           }
           transactions(fromAccount: {slug: $slug}, limit: 1, type: DEBIT) {
             nodes {
+              account { id name slug }
               amountInHostCurrency {
                 value
               }
@@ -162,6 +169,7 @@ export async function getOpenCollectiveMetadata(
   const json: OpenCollectiveMetadataQueryResult = await res.json();
   let metadata: Metadata = { is_backer: 0 };
   const accounts = [json.data, ...json.data.account.organizations.nodes];
+  let result: MetadataResult = { metadata };
   for (const { account } of accounts) {
     if (account.memberOf.nodes.length == 0) {
       continue;
@@ -181,10 +189,11 @@ export async function getOpenCollectiveMetadata(
       continue;
     }
     const transaction = account.transactions.nodes[0];
+    result.user = transaction.account;
     if (!metadata.last_donation || transaction.createdAt > metadata.last_donation) {
       metadata.last_donation = transaction.createdAt;
       metadata.last_donation_amount = Math.ceil(-transaction.amountInHostCurrency.value);
     }
   }
-  return metadata;
+  return result;
 }
