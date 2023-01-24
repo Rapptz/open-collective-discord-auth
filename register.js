@@ -18,27 +18,52 @@ async function run() {
     {
       key: "total_donated",
       name: "Total Donated",
+      name_localizations: {
+        de: "Insgesamt gespendet",
+      },
       description: "Minimum amount to donate",
+      description_localizations: {
+        de: "Mindestbetrag, der gespendet werden muss",
+      },
       type: 2,
     },
     {
       key: "last_donation",
       name: "Last Donation",
+      name_localizations: {
+        de: "Letzte Spende",
+      },
       description: "Maximum days since their last donation",
+      description_localizations: {
+        de: "Maximale Anzahl der Tage seit der letzten Spende",
+      },
       type: 5,
     },
     {
       key: "last_donation_amount",
       name: "Last Donation Amount",
+      name_localizations: {
+        de: "Letzter Spendenbetrag",
+      },
       description: "Minimum amount of their last donation",
+      description_localizations: {
+        de: "Mindestbetrag der letzten Spende",
+      },
       type: 2,
     },
     {
       key: "is_backer",
       name: "Backer",
-      description: "The user has either donated at least once before or is a member of the collective",
+      name_localizations: {
+        de: "Unterstützer",
+      },
+      description:
+        "The user has either donated at least once before or is a member of the collective",
+      description_localizations: {
+        de: "Der Benutzer hat entweder mindestens einmal gespendet oder ist Mitglied des Kollektivs",
+      },
       type: 7,
-    }
+    },
   ];
 
   const response = await fetch(url, {
