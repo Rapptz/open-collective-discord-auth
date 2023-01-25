@@ -53,7 +53,7 @@ async function run() {
     },
     {
       key: "is_backer",
-      name: "Backer",
+      name: "Supporter",
       name_localizations: {
         de: "Unterstützer",
       },
