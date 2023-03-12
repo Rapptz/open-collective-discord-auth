@@ -94,6 +94,24 @@ interface OpenCollectiveState {
   metadata: Metadata;
 }
 
+/* used by the server to (eventually) update user metadata */
+router.post("/open-collective/webhook", async (req: IttyRequest) => {
+  // Right now this just mirrors the webhook payload to a raw Discord embed.
+  // In the future, this will be used to update user metadata.
+  // There will also need to be a way to migrate over from my old bot to the new way of doing it.
+
+  const formData = new FormData();
+
+  // Format the JSON for pretty consumption
+  const json = JSON.stringify(await req.json(), null, 2);
+  formData.append("files[0]", new Blob([json]), "expense.json");
+
+  await fetch(DISCORD_WEBHOOK_URL, {
+    method: "POST",
+    body: formData,
+  });
+});
+
 /* user comes to this after logging in to Open Collective but before logging in to Discord */
 router.get("/open-collective/redirect", async (req: IttyRequest) => {
   const { code, state } = req.query;
