@@ -151,7 +151,7 @@ export async function getOpenCollectiveMetadata(
         query metadata($slug: String, $account_id: String) {
           account (id: $account_id) {
             ...AccountParts
-            organizations: memberOf (accountType: ORGANIZATION) {
+            organizations: memberOf (accountType: [COLLECTIVE, ORGANIZATION], limit: 1) {
               nodes {
                 account {
                   ...AccountParts
