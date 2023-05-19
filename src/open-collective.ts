@@ -92,7 +92,7 @@ interface OpenCollectiveMetadataQueryResultAccount {
   transactions: {
     nodes: {
       account: OpenCollectiveUser;
-      amountInHostCurrency: {
+      netAmountInHostCurrency: {
         value: number;
       };
       createdAt: string;
@@ -141,7 +141,7 @@ export async function getOpenCollectiveMetadata(
           transactions(fromAccount: {slug: $slug}, limit: 1, type: DEBIT) {
             nodes {
               account { id name slug }
-              amountInHostCurrency {
+              netAmountInHostCurrency {
                 value
               }
               createdAt
@@ -192,7 +192,7 @@ export async function getOpenCollectiveMetadata(
     result.user = transaction.account;
     if (!metadata.last_donation || transaction.createdAt > metadata.last_donation) {
       metadata.last_donation = transaction.createdAt;
-      metadata.last_donation_amount = Math.ceil(-transaction.amountInHostCurrency.value);
+      metadata.last_donation_amount = Math.ceil(-transaction.netAmountInHostCurrency.value);
     }
   }
   return result;
