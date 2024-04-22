@@ -76,7 +76,7 @@ async function run() {
       description_localizations: {
         de: "Der Benutzer hat entweder mindestens einmal gespendet oder ist Mitglied des Kollektivs",
         th: "ผู้ใช้เคยบริจาคอย่างน้อยหนึ่งครั้งมาก่อนหรือเป็นสมาชิกของ the collective",
-        ja: "過去に一度でも寄付したことがある、もしくはその集団のメンバーか",
+        ja: "過去に一度でも寄付したことがある、もしくはそのコレクティブのメンバーか",
       },
       type: 7,
     },
