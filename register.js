@@ -53,7 +53,7 @@ async function run() {
       name_localizations: {
         de: "Letzter Spendenbetrag",
         th: "จำนวนเงินที่บริจาคครั้งล่าสุด",
-        ja: "最後した寄付金額",
+        ja: "最後寄付した際の金額",
       },
       description: "Minimum amount of their last donation",
       description_localizations: {
