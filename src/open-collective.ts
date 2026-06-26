@@ -14,7 +14,7 @@ export async function getOpenCollectiveLoginUrl(nonce: string): Promise<string> 
   url.searchParams.append("client_id", OPEN_COLLECTIVE_CLIENT_ID);
   url.searchParams.append("redirect_uri", OPEN_COLLECTIVE_REDIRECT_URL);
   url.searchParams.append("response_type", "code");
-  url.searchParams.append("scope", "account");
+  url.searchParams.append("scope", "account transactions");
   url.searchParams.append("state", state);
   return url.toString();
 }
